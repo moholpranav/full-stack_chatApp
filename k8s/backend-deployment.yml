@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment    #deployment name
+  namespace: chat-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend            #lables to identify them
+  template:
+    metadata:
+      name: backend-pod       #pod name
+      namespace: chat-app
+      labels: 
+        app: backend
+    spec:                     #creating container using image
+      containers:
+      - name: chatapp-backend   #name of image
+        image: pranav1482/chatapp-backend:latest   #aapna keleli image tya docker file madhun ti push keleli hub la ti image
+        ports:
+        - containerPort: 5001    #he docker file madhe ahe toch expose kelay mhanun to
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: MONGODB_URI    #to connect backend to our database
+          value: "mongodb://mongoadmin:secret@mongodb:27017/dbname?authSource=admin"  #given the uri whci include the username and pass and service name , he developer ne dilel asat
+        - name: JWT_SECRET   #name dil
+          valueFrom:        #tyache valu ithe nahi m kuthun aali te
+            secretKeyRef:
+              name: chatapp-secrets    #tya file ch naav tech
+              key: jwt       #key mhaje te jwt token
+        - name: PORT
+          value: "5001"      

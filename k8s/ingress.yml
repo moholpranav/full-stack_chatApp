@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chatapp-ingress
+  namespace: chat-app
+  labels:
+    name: chatapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /        
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"   #he https nahi tkal tari chalana tya sathi takav lagat
+spec:
+  rules:
+  - host: chat-tws.com          #ha host mhanje googla he tkal ki yeanr
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"             # he  / takal ki kuhali service chalali pahiche te (forntend chi)
+        backend:              #he baackend backedn service nahi tar / kelayvr aat ky te ahe
+          service:
+            name: frontend    #service name
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: "/api"        #tas /api takal ki kuthali srevice te
+        backend:
+          service:
+            name: backend
+            port: 
+              number: 5001

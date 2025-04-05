@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  namespace: chat-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      name: mongodb-pod      #pos name
+      namespace: chat-app
+      labels: 
+        app: mongodb
+    spec:
+      containers:
+      - name: chatapp-mongodb   #image name
+        image: mongo:latest
+        ports:
+        - containerPort: 27017  #hach asto hyacha
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME  #te use karayla (mongo) tya container chy aat user name and passs tar to tya sec file madhe
+          value: mongoadmin
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: secret
+      volumes:       #aata je pv ani pvc banavaly te hya container la detoy
+      - name: mongo-data      #volume name
+        persistentVolumeClaim:
+          claimName: mongodb-pvc   #he tya claim ch naav tech    
+
+
